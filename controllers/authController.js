@@ -8,7 +8,7 @@ module.exports.registerUser = async (req, res) => {
 
         let user = await userModel.findOne({ email });
         if (user) {
-            return res.status(400).send('User already exists');
+            return res.status(400).send({ message: 'User already exists' });
         }
 
         let salt = await bcrypt.genSalt();
@@ -27,10 +27,10 @@ module.exports.registerUser = async (req, res) => {
         user = await userModel.findOne({ email: email }).select("-password");
         const addToken = { token: token };
         user = { ...user._doc, ...addToken };
-        console.log(user);
+        // console.log(user);
         res.status(201).send(user);
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).send({ messgae: error.message });
     }
 
 };
@@ -41,7 +41,7 @@ module.exports.loginUser = async (req, res) => {
         let user = await userModel.findOne({ email: email });
 
         if(!user){
-            res.status(404).send("User not found");
+            res.status(404).send({ message: "User not found"});
         }
         else {
             let passwordResult = await bcrypt.compare(password, user.password);
@@ -58,15 +58,15 @@ module.exports.loginUser = async (req, res) => {
                 const addToken = { token: token };
                 user = { ...user._doc, ...addToken };
                 // console.log(user);
-                res.status(201).send(user);
+                res.status(200).send(user);
             }
             else{
-                res.status(401).send("Invalid credentials");
+                res.status(401).send({ message: "Invalid credentials" });
             }
         }
     }
     catch(error){
-        res.status(500).send(error.message);
+        res.status(500).send({ message: error.message });
     }
 };
 module.exports.logoutUser = (req, res) => { 
@@ -75,8 +75,8 @@ module.exports.logoutUser = (req, res) => {
         secure: true,
     })
 
-    res.status(201).send("User logged out successfully");
+    res.status(201).send({ message: "User logged out successfully"});
 };
 module.exports.profileUser = (req, res) => { 
-    res.status(200).send(`You are logged in successfully \n${req.user}`);
+    res.status(200).send(req.user);
 };
