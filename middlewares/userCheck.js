@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/user');
 module.exports.userCheck = async(req, res, next) => {
-    const { token } = req.body;
+    const token = req.headers.authorization.split(' ')[1];
     
     if(req.cookies.token || token) {
         try {
@@ -16,6 +16,6 @@ module.exports.userCheck = async(req, res, next) => {
         }
     }
     else{
-        res.status(401).send("Not authorized, you don't have permission to access")
+        res.status(401).send({ messgage: "Not authorized, you don't have permission to access" })
     }
 }
