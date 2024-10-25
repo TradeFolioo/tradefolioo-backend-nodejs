@@ -80,3 +80,15 @@ module.exports.logoutUser = (req, res) => {
 module.exports.profileUser = (req, res) => { 
     res.status(200).send(req.user);
 };
+
+module.exports.updateProfile = async (req, res) => {
+    // res.status(200).send(req.user);
+    const { profileImage, bio, name } = req.body;
+
+    try {
+        const updatedUser = await userModel.findByIdAndUpdate(req.user._id, { $set: {'name': name, 'profileImage': profileImage, 'bio': bio}}, { new: true }).select("-password");
+        res.status(200).send(updatedUser);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+}

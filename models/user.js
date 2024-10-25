@@ -13,6 +13,14 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    profileImage: {
+        type: String,
+        default: 'https://placehold.co/300x300/EEE/31343C?font=playfair-display&text=TradeFolioo'
+    },
+    bio: {
+        type: String,
+        default: "I'm new to TradeFolioo!"
     }
 });
 
